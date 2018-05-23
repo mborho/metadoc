@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import imp
 import sys
 import os
@@ -31,7 +29,7 @@ def isPunct(word):
   return re.search(pattern, word) is not None
 
 class EntityExtractor(object):
-  def __init__(self, text):
+  def __init__(self, text, *, lang):
     self.perceptron_tagger = AveragedPerceptronTagger(autoload=True)
     self.stopwords = set(nltk.corpus.stopwords.words())
     self.top_fraction = 70 # consider top candidate keywords only

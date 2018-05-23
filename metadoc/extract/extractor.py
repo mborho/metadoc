@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import re
 import logging
 import lxml
@@ -9,7 +10,10 @@ import hashlib
 from langdetect import detect
 from goose3 import Goose, Configuration
 
-from .ner import EntityExtractor
+if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+    from .gnla import EntityExtractor
+else:
+    from .ner import EntityExtractor
 from .html import HtmlMeta
 
 logger = logging.getLogger(__name__)
@@ -74,7 +78,7 @@ class Extractor(object):
     self.fulltext = res.cleaned_text
     self.language = res.meta_lang
 
-    entities = EntityExtractor(self.fulltext)
+    entities = EntityExtractor(self.fulltext, lang=self.language)
     entities.get_scored_entities() # Averaged Perceptron Tagger
     self.keywords = entities.get_keywords() # Above median?
     self.names = entities.get_names() # Filter top
